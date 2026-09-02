@@ -1,10 +1,11 @@
 package com.warlley.biblioteca.controller;
 
+import com.warlley.biblioteca.model.Livro;
 import com.warlley.biblioteca.service.LivroService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class LivroController {
@@ -14,16 +15,42 @@ public class LivroController {
         this.livroService = livroService;
     }
 
-    @GetMapping("/livros")
+    @GetMapping("/livrosMenu")
     public String livros(){
-        if(!livroService.buscarLivro(4L).getTitulo().isEmpty()){
-            return livroService.buscarLivro(4L).getTitulo();
-        }
-        return "não há livro com esse titulo";
+        return """      
+                        BIBLIOTECA\s
+                        MENU\s
+                        DIGITE 1 PARA CADASTRAS LIVRO -- DIGITE 2 PARA LISTA LIVROS\s
+                        DIGITE 3 PARA BUSCAR LIVRO -- DIGITE 4 PARA EMPRESTAR LIVRO\s
+                        DIGITE 5 PARA DEVOLVER LIVRO -- DIGITE 6 PARA REMOVER LIVRO\s
+                        DIGITE 7 PARA SAIR""";
+    }
+
+    @GetMapping("/livros")
+    public List<Livro> listaLivros(){
+        return livroService.buscarTodosLivros();
+    }
+
+    @GetMapping("/livros/{id}")
+    public Livro getLivro(@PathVariable Long id){
+        return livroService.buscarLivro(id);
     }
 
     @PostMapping("/livros")
-    public void deletarLivro(@RequestBody Long aLong){
-        livroService.deletarLivro(aLong);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Livro addLivro(@RequestBody Livro livro){
+        return livroService.addLivro(livro);
+    }
+
+    @PutMapping("/livros/{id}")
+    public Livro updateLivro(@RequestBody Livro livro){
+        livro.setDisponivel(!livro.isDisponivel());
+        return livroService.updateLivro(livro);
+    }
+
+    @DeleteMapping("/livros/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLivro(@PathVariable @RequestBody Long id){
+            livroService.deletarLivro(id);
     }
 }
