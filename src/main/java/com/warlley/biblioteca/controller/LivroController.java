@@ -43,9 +43,8 @@ public class LivroController {
     }
 
     @PutMapping("/livros/{id}")
-    public Livro updateLivro(@RequestBody Livro livro){
-        livro.setDisponivel(!livro.isDisponivel());
-        return livroService.updateLivro(livro);
+    public Livro updateLivro(@RequestBody Livro livro, @PathVariable Long id){
+        return livroService.updateLivro(livro, id);
     }
 
     @DeleteMapping("/livros/{id}")

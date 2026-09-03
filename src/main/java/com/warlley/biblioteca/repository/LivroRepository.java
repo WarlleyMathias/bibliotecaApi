@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LivroRepository extends JpaRepository<Livro, Long> {
 
-    Boolean findLivroByTitulo(String titulo);
+    boolean existsByTitulo(String titulo);
 
-    Boolean findLivroById(long id);
 }

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 
 @Service
 public class UsuarioService {
@@ -15,12 +17,22 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Usuario buscarUsuario(Long id){
-        return usuarioRepository.findById(id).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuario não encontrado!"));
+    public List<Usuario> buscarTodosUsuarios(){
+        return usuarioRepository.findAll();
     }
     public void criarUsuario(Usuario usuario){
-        usuarioRepository.save(usuario);
+        if(verificaNome(usuario.getNome()) || verificaEmail(usuario.getEmail())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"já existe um usuario com esse nome ou email já cadastrado!");
+        }else{
+            usuarioRepository.save(usuario);
+        }
+    }
+
+    public boolean verificaNome(String nome){
+        return usuarioRepository.existsByNome(nome);
+    }
+    public boolean verificaEmail(String email){
+        return usuarioRepository.existsByEmail(email);
     }
 
 }

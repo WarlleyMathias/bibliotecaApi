@@ -5,6 +5,8 @@ import com.warlley.biblioteca.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UsuarioController {
 
@@ -15,8 +17,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuarios")
-    public Usuario buscarUsuario(@RequestParam Long id){
-        return usuarioService.buscarUsuario(id);
+    public List<Usuario> buscarUsuario(){
+        return usuarioService.buscarTodosUsuarios();
     }
     @PostMapping("/usuarios")
     @ResponseStatus(HttpStatus.CREATED)

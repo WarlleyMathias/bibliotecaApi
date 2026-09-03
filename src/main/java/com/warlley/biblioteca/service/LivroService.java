@@ -33,11 +33,13 @@ public class LivroService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
         }
     }
-    public Livro updateLivro(Livro livro){
-        if(buscarLivroId(livro.getId())) {
+    public Livro updateLivro(Livro livro, Long id){
+        livro.setDisponivel(!livro.isDisponivel());
+        livro.setId(id);
+        if(buscarLivroId(livro.getId()) && !buscarLivroTitulo(livro.getTitulo())) {
             return livroRepository.save(livro);
         } else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente ou titulo indisponivel");
         }
     }
 
@@ -50,9 +52,9 @@ public class LivroService {
     }
 
     public Boolean buscarLivroTitulo(String titulo){
-        return livroRepository.findLivroByTitulo(titulo);
+        return livroRepository.existsByTitulo(titulo);
     }
     public Boolean buscarLivroId(Long id){
-        return livroRepository.findLivroById(id);
+        return livroRepository.existsById(id);
     }
 }
