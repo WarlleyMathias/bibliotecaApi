@@ -20,7 +20,7 @@ public class Emprestimo {
     public Long getIdUsuario() {
         return idUsuario;
     }
-    
+
 
     public void setDataEmprestimo(String dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
