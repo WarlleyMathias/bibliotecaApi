@@ -1,5 +1,7 @@
 package com.warlley.biblioteca.controller;
 
+import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
+import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
 import com.warlley.biblioteca.model.Emprestimo;
 import com.warlley.biblioteca.service.EmprestimoService;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,7 @@ public class EmprestimoController {
     }
 
     @GetMapping("/emprestimos")
-    public List<Emprestimo> getEmprestimo(){
+    public List<EmprestimoResponseDTO> getEmprestimo(){
         return emprestimoService.buscarTodosEmprestimo();
     }
 
@@ -26,9 +28,9 @@ public class EmprestimoController {
         emprestimoService.removeEmprestimo(id);
     }
 
-    @PostMapping("/emprestimos")
+    @PostMapping("/emprestimos/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public Emprestimo addEmprestimo(@RequestBody Emprestimo emprestimo){
-        return emprestimoService.addEmprestimo(emprestimo);
+    public EmprestimoResponseDTO addEmprestimo(@RequestBody EmprestimoRequestDTO emprestimoDTO){
+        return emprestimoService.addEmprestimo(emprestimoDTO);
     }
 }

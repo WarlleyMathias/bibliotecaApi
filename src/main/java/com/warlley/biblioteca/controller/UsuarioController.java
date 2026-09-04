@@ -1,5 +1,7 @@
 package com.warlley.biblioteca.controller;
 
+import com.warlley.biblioteca.dto.UsuarioRequestDTO;
+import com.warlley.biblioteca.dto.UsuarioResponseDTO;
 import com.warlley.biblioteca.model.Usuario;
 import com.warlley.biblioteca.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuarios")
-    public List<Usuario> buscarUsuario(){
+    public List<UsuarioResponseDTO> buscarUsuario(){
         return usuarioService.buscarTodosUsuarios();
     }
     @PostMapping("/usuarios")
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvarUsuario(@RequestBody Usuario usuario){
-        usuarioService.criarUsuario(usuario);
+    public void salvarUsuario(@RequestBody UsuarioRequestDTO usuarioDTO){
+        usuarioService.criarUsuario(usuarioDTO);
     }
 }

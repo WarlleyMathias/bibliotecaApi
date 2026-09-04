@@ -1,5 +1,6 @@
 package com.warlley.biblioteca.model;
 
+import com.warlley.biblioteca.dto.UsuarioRequestDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,13 @@ public class Usuario {
     private long id;
     private String nome;
     private String email;
+
+    public Usuario(UsuarioRequestDTO usuarioRequestDTO){
+        this.nome = usuarioRequestDTO.nome();
+        this.email = usuarioRequestDTO.email();
+    }
+    public Usuario(){
+    }
 
     public long getId() {
         return id;
@@ -27,4 +35,11 @@ public class Usuario {
         return email;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

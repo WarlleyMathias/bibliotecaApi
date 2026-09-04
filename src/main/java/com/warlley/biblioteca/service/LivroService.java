@@ -1,7 +1,10 @@
 package com.warlley.biblioteca.service;
 
+import com.warlley.biblioteca.dto.LivroRequestDTO;
+import com.warlley.biblioteca.dto.LivroResponseDTO;
 import com.warlley.biblioteca.model.Livro;
 import com.warlley.biblioteca.repository.LivroRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +24,11 @@ public class LivroService {
         return livroRepository.findById(aLong).orElseThrow(()
         -> new ResponseStatusException(HttpStatus.NOT_FOUND,"livro não encontrado"));
     }
+    public void disponivelLivro(Long id){
+        Livro livro = buscarLivro(id);
+        livro.setDisponivel(!livro.getDisponivel());
+        livroRepository.save(livro);
+    }
 
     public List<Livro> buscarTodosLivros(){
         return livroRepository.findAll();
@@ -29,26 +37,30 @@ public class LivroService {
     public void deletarLivro(Long aLong){
         if(buscarLivroId(aLong)){
             livroRepository.deleteById(aLong);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
         }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
+
     }
-    public Livro updateLivro(Livro livro, Long id){
+    @Transactional
+    public LivroResponseDTO updateLivro(LivroRequestDTO livroDTO, Long id){
+        Livro livro = new Livro(livroDTO);
         livro.setDisponivel(!livro.isDisponivel());
         livro.setId(id);
         if(buscarLivroId(livro.getId()) && !buscarLivroTitulo(livro.getTitulo())) {
-            return livroRepository.save(livro);
-        } else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente ou titulo indisponivel");
+            return new LivroResponseDTO(livroRepository.save(livro));
         }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente ou titulo indisponivel");
+
     }
 
-    public Livro addLivro(Livro livro){
-        if(buscarLivroTitulo(livro.getTitulo())) {
+    @Transactional
+    public LivroResponseDTO addLivro(LivroRequestDTO livroDTO){
+        if(buscarLivroTitulo(livroDTO.titulo())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "livro ja existente");
-        } else{
-            return livroRepository.save(livro);
         }
+        Livro livro = new Livro(livroDTO);
+        return new LivroResponseDTO(livroRepository.save(livro));
+
     }
 
     public Boolean buscarLivroTitulo(String titulo){

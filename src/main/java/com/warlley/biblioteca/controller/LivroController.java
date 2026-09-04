@@ -1,5 +1,7 @@
 package com.warlley.biblioteca.controller;
 
+import com.warlley.biblioteca.dto.LivroRequestDTO;
+import com.warlley.biblioteca.dto.LivroResponseDTO;
 import com.warlley.biblioteca.model.Livro;
 import com.warlley.biblioteca.service.LivroService;
 import org.springframework.http.HttpStatus;
@@ -38,13 +40,13 @@ public class LivroController {
 
     @PostMapping("/livros")
     @ResponseStatus(HttpStatus.CREATED)
-    public Livro addLivro(@RequestBody Livro livro){
-        return livroService.addLivro(livro);
+    public LivroResponseDTO addLivro(@RequestBody LivroRequestDTO livroDTO){
+        return livroService.addLivro(livroDTO);
     }
 
     @PutMapping("/livros/{id}")
-    public Livro updateLivro(@RequestBody Livro livro, @PathVariable Long id){
-        return livroService.updateLivro(livro, id);
+    public LivroResponseDTO updateLivro(@RequestBody LivroRequestDTO livroDTO, @PathVariable Long id){
+        return livroService.updateLivro(livroDTO, id);
     }
 
     @DeleteMapping("/livros/{id}")

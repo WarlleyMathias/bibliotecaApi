@@ -1,7 +1,11 @@
 package com.warlley.biblioteca.service;
 
+import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
+import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
 import com.warlley.biblioteca.model.Emprestimo;
 import com.warlley.biblioteca.repository.EmprestimoRepository;
+import com.warlley.biblioteca.util.DataUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,9 +15,11 @@ import java.util.List;
 @Service
 public class EmprestimoService {
     private final EmprestimoRepository emprestimoRepository;
+    private final LivroService livroService;
 
-    public EmprestimoService(EmprestimoRepository emprestimoRepository){
+    public EmprestimoService(EmprestimoRepository emprestimoRepository, LivroService livroService){
         this.emprestimoRepository = emprestimoRepository;
+        this.livroService = livroService;
     }
 
     public Emprestimo buscarEmprestimo(Long id){
@@ -21,14 +27,21 @@ public class EmprestimoService {
         -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Emprestimo não existente!"));
     }
 
-    public Emprestimo addEmprestimo(Emprestimo emprestimo){
+    @Transactional
+    public EmprestimoResponseDTO addEmprestimo(EmprestimoRequestDTO emprestimoDTO){
+        Emprestimo emprestimo = new Emprestimo(emprestimoDTO);
         if(verificaEmprestimo(emprestimo.getIdLivro(),emprestimo.getIdUsuario())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Livro já emprestado!");
         }else{
-            return emprestimoRepository.save(emprestimo);
+            emprestimo.setDataDevolucao(DataUtil.dataDevolucao());
+            emprestimo.setDataEmprestimo(DataUtil.dataAtual());
+            livroService.disponivelLivro(emprestimo.getIdLivro());
+            return new EmprestimoResponseDTO(emprestimoRepository.save(emprestimo));
         }
     }
+    @Transactional
     public void removeEmprestimo(Long id){
+        livroService.disponivelLivro(buscarEmprestimo(id).getIdLivro());
         emprestimoRepository.delete(buscarEmprestimo(id));
     }
 
@@ -36,7 +49,7 @@ public class EmprestimoService {
         return emprestimoRepository.existsByIdLivroAndIdUsuario(idLivro, idUsuario);
     }
 
-    public List<Emprestimo> buscarTodosEmprestimo(){
-        return emprestimoRepository.findAll();
+    public List<EmprestimoResponseDTO> buscarTodosEmprestimo(){
+        return emprestimoRepository.findAll().stream().map(EmprestimoResponseDTO::new).toList();
     }
 }

@@ -1,5 +1,7 @@
 package com.warlley.biblioteca.model;
 
+import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
+import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +14,14 @@ public class Emprestimo {
     private Long idUsuario;
     private String dataEmprestimo;
     private String dataDevolucao;
+
+    public Emprestimo(EmprestimoRequestDTO emprestimoRequestDTO){
+        this.idLivro = emprestimoRequestDTO.id_livro();
+        this.idUsuario = emprestimoRequestDTO.id_usuario();
+    }
+
+    public Emprestimo(){
+    }
 
     public Long getIdLivro() {
         return idLivro;
@@ -28,5 +38,29 @@ public class Emprestimo {
 
     public void setDataDevolucao(String dataDevolucao) {
         this.dataDevolucao = dataDevolucao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setIdLivro(Long idLivro) {
+        this.idLivro = idLivro;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getDataEmprestimo() {
+        return dataEmprestimo;
+    }
+
+    public String getDataDevolucao() {
+        return dataDevolucao;
     }
 }

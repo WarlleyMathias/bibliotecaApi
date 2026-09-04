@@ -1,5 +1,7 @@
 package com.warlley.biblioteca.model;
 
+import com.warlley.biblioteca.dto.LivroRequestDTO;
+import com.warlley.biblioteca.dto.LivroResponseDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,7 +16,15 @@ public class Livro {
     private int ano;
     private boolean disponivel;
 
-    public Livro(){
+    public Livro(LivroRequestDTO livroRequestDTO) {
+        this.titulo = livroRequestDTO.titulo();
+        this.autor = livroRequestDTO.autor();
+        this.ano = livroRequestDTO.ano();
+        this.disponivel = true;
+    }
+
+    public Livro() {
+
     }
 
     public long getId() {
@@ -35,5 +45,29 @@ public class Livro {
 
     public void setDisponivel(boolean disponivel) {
         this.disponivel = disponivel;
+    }
+
+    public boolean getDisponivel() {
+        return disponivel;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public int getAno() {
+        return ano;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
     }
 }
