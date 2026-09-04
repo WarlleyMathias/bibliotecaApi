@@ -3,6 +3,7 @@ package com.warlley.biblioteca.controller;
 import com.warlley.biblioteca.dto.UsuarioRequestDTO;
 import com.warlley.biblioteca.dto.UsuarioResponseDTO;
 import com.warlley.biblioteca.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class UsuarioController {
     }
     @PostMapping("/usuarios")
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvarUsuario(@RequestBody UsuarioRequestDTO usuarioDTO){
+    public void salvarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO){
         usuarioService.criarUsuario(usuarioDTO);
     }
 }

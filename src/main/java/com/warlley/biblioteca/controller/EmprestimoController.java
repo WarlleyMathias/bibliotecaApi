@@ -3,6 +3,7 @@ package com.warlley.biblioteca.controller;
 import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
 import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
 import com.warlley.biblioteca.service.EmprestimoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class EmprestimoController {
 
     @PostMapping("/emprestimos/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public EmprestimoResponseDTO addEmprestimo(@RequestBody EmprestimoRequestDTO emprestimoDTO){
+    public EmprestimoResponseDTO addEmprestimo(@Valid @RequestBody EmprestimoRequestDTO emprestimoDTO){
         return emprestimoService.addEmprestimo(emprestimoDTO);
     }
 }
