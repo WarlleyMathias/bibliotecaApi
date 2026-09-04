@@ -2,7 +2,6 @@ package com.warlley.biblioteca.controller;
 
 import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
 import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
-import com.warlley.biblioteca.model.Emprestimo;
 import com.warlley.biblioteca.service.EmprestimoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

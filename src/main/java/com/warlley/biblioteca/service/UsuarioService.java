@@ -1,6 +1,5 @@
 package com.warlley.biblioteca.service;
 
-import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
 import com.warlley.biblioteca.dto.UsuarioRequestDTO;
 import com.warlley.biblioteca.dto.UsuarioResponseDTO;
 import com.warlley.biblioteca.model.Usuario;

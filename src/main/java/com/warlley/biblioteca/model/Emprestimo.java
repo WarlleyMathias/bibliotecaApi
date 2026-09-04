@@ -1,7 +1,6 @@
 package com.warlley.biblioteca.model;
 
 import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
-import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
 import jakarta.persistence.*;
 
 @Entity
