@@ -2,9 +2,17 @@ package com.warlley.biblioteca.model;
 
 import com.warlley.biblioteca.dto.LivroRequestDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "livros")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Livro {
 
     @Id
@@ -20,53 +28,5 @@ public class Livro {
         this.autor = livroRequestDTO.autor();
         this.ano = livroRequestDTO.ano();
         this.disponivel = true;
-    }
-
-    public Livro() {
-
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public boolean isDisponivel() {
-        return disponivel;
-    }
-
-    public void setDisponivel(boolean disponivel) {
-        this.disponivel = disponivel;
-    }
-
-    public boolean getDisponivel() {
-        return disponivel;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
-    public int getAno() {
-        return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
     }
 }

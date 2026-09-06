@@ -2,9 +2,17 @@ package com.warlley.biblioteca.model;
 
 import com.warlley.biblioteca.dto.UsuarioRequestDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "usuarios")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,31 +23,5 @@ public class Usuario {
     public Usuario(UsuarioRequestDTO usuarioRequestDTO){
         this.nome = usuarioRequestDTO.nome();
         this.email = usuarioRequestDTO.email();
-    }
-    public Usuario(){
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
