@@ -24,12 +24,12 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream().map(UsuarioResponseDTO::new).toList();
     }
     @Transactional
-    public void criarUsuario(UsuarioRequestDTO usuarioDTO){
+    public UsuarioResponseDTO criarUsuario(UsuarioRequestDTO usuarioDTO){
         Usuario usuario = new Usuario(usuarioDTO);
         if(verificaNome(usuario.getNome()) || verificaEmail(usuario.getEmail())){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"já existe um usuario com esse nome ou email já cadastrado!");
         }else{
-            usuarioRepository.save(usuario);
+            return new UsuarioResponseDTO(usuarioRepository.save(usuario));
         }
     }
 
