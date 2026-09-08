@@ -27,7 +27,7 @@ public class LivroController {
             @ApiResponse(responseCode = "200", description = "lista retornada com sucesso.")
     })
     @GetMapping("/livros")
-    public List<LivroResponseDTO> listaLivros(){
+    public List<LivroResponseDTO> listarLivros(){
         return livroService.buscarTodosLivros();
     }
 

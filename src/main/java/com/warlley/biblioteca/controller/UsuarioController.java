@@ -28,7 +28,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Retorna a lista de usuarios mesmo que vazia.")
     })
     @GetMapping("/usuarios")
-    public List<UsuarioResponseDTO> buscarUsuario(){
+    public List<UsuarioResponseDTO> buscarUsuarios(){
         return usuarioService.buscarTodosUsuarios();
     }
 

@@ -27,7 +27,7 @@ public class EmprestimoController {
             @ApiResponse(responseCode = "200", description = "retorna um lista de emprestimo mesmo que vazia.")
     })
     @GetMapping("/emprestimos")
-    public List<EmprestimoResponseDTO> getEmprestimo(){
+    public List<EmprestimoResponseDTO> getEmprestimos(){
         return emprestimoService.buscarTodosEmprestimo();
     }
 
