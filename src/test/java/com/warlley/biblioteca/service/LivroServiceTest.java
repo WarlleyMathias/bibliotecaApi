@@ -58,7 +58,7 @@ public class LivroServiceTest {
             verify(livroRepository, times(1)).save(livroSalvo);
         }
         @Test
-        @DisplayName("Deve Lançar uma exceção 404 ao tentar atualizar livro no banco de dados.")
+        @DisplayName("Deve Lançar uma exceção 404 NOT_FOUND ao tentar atualizar livro no banco de dados.")
         void deveLancarUmaExcecaoIdNaoEncontrado(){
             Long id = 1L;
             LivroRequestDTO livro = new LivroRequestDTO("Code Clean","Warlley",1999);
@@ -74,7 +74,7 @@ public class LivroServiceTest {
 
         }
         @Test
-        @DisplayName("Deve Lançar uma exceção 409 ao tentar atualizar livro no banco de dados.")
+        @DisplayName("Deve Lançar uma exceção 409 CONFLICT ao tentar atualizar livro no banco de dados.")
         void deveLancarUmaExcecaoTituloConflito(){
             Long id = 1L;
             LivroRequestDTO livro = new LivroRequestDTO("Code Clean","Warlley",1999);
@@ -111,7 +111,7 @@ public class LivroServiceTest {
             verify(livroRepository,times(1)).deleteById(id);
         }
         @Test
-        @DisplayName("Deve Lancar uma exceção 404 ao tentar deletar um livro através do Id.")
+        @DisplayName("Deve Lancar uma exceção 404 NOT_FOUND ao tentar deletar um livro através do Id.")
         void deveLancarExcecaoDeletarLivro(){
             Long id = 1L;
 
@@ -151,7 +151,7 @@ public class LivroServiceTest {
         }
 
         @Test
-        @DisplayName("Deve lançar exceção 404 ao tentar buscar livro por ID inexistente.")
+        @DisplayName("Deve lançar exceção 404 NOT_FOUND ao tentar buscar livro por ID inexistente.")
         void deveLancarUmaExcecaoBuscarLivro(){
             Long id = 1L;
 
@@ -223,7 +223,7 @@ public class LivroServiceTest {
         }
 
         @Test
-        @DisplayName("Deve lançar uma exceção, se o titulo do livro a ser cadastrado for igual a um livro já existente no banco de dados.")
+        @DisplayName("Deve lançar uma exceção 409 CONFLICT, se o titulo do livro a ser cadastrado for igual a um livro já existente no banco de dados.")
         void deveLancarExcecaoTituloLivroExiste(){
             LivroRequestDTO dto = new LivroRequestDTO("Clean Code", "Robert C. Martin",1999);
 

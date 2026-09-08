@@ -22,15 +22,10 @@ public class EmprestimoService {
         this.livroService = livroService;
     }
 
-    public Emprestimo buscarEmprestimo(Long id){
-        return emprestimoRepository.findById(id).orElseThrow(()
-        -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Emprestimo não existente!"));
-    }
-
     @Transactional
     public EmprestimoResponseDTO addEmprestimo(EmprestimoRequestDTO emprestimoDTO){
         Emprestimo emprestimo = new Emprestimo(emprestimoDTO);
-        if(verificaEmprestimo(emprestimo.getIdLivro(),emprestimo.getIdUsuario())){
+        if(emprestimoRepository.existsByIdLivroAndIdUsuario(emprestimo.getIdLivro(),emprestimo.getIdUsuario())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Livro já emprestado!");
         }else{
             emprestimo.setDataDevolucao(DataUtil.dataDevolucao());
@@ -41,12 +36,10 @@ public class EmprestimoService {
     }
     @Transactional
     public void removeEmprestimo(Long id){
-        livroService.disponivelLivro(buscarEmprestimo(id).getIdLivro());
-        emprestimoRepository.delete(buscarEmprestimo(id));
-    }
-
-    public Boolean verificaEmprestimo(Long idLivro, Long idUsuario){
-        return emprestimoRepository.existsByIdLivroAndIdUsuario(idLivro, idUsuario);
+        Emprestimo emprestimoBuscado = emprestimoRepository.findById(id).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Emprestimo não existente!"));
+        livroService.disponivelLivro(emprestimoBuscado.getIdLivro());
+        emprestimoRepository.deleteById(emprestimoBuscado.getId());
     }
 
     public List<EmprestimoResponseDTO> buscarTodosEmprestimo(){

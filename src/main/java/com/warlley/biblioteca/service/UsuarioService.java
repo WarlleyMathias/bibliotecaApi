@@ -26,18 +26,11 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponseDTO criarUsuario(UsuarioRequestDTO usuarioDTO){
         Usuario usuario = new Usuario(usuarioDTO);
-        if(verificaNome(usuario.getNome()) || verificaEmail(usuario.getEmail())){
+        if(usuarioRepository.existsByNome(usuario.getNome()) || usuarioRepository.existsByEmail(usuario.getEmail())){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"já existe um usuario com esse nome ou email já cadastrado!");
         }else{
             return new UsuarioResponseDTO(usuarioRepository.save(usuario));
         }
-    }
-
-    public boolean verificaNome(String nome){
-        return usuarioRepository.existsByNome(nome);
-    }
-    public boolean verificaEmail(String email){
-        return usuarioRepository.existsByEmail(email);
     }
 
 }

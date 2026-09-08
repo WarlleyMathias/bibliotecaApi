@@ -30,6 +30,9 @@ public class EmprestimoServiceTest {
     @InjectMocks
     private EmprestimoService emprestimoService;
 
+    @InjectMocks
+    private LivroService livroService;
+
     @Nested
     @DisplayName("Tests do método buscar todos emprestimos.")
     class buscarTodosEmprestimos{
@@ -76,6 +79,7 @@ public class EmprestimoServiceTest {
 
 
             when(emprestimoRepository.existsByIdLivroAndIdUsuario(dto.id_livro(),dto.id_usuario())).thenReturn(false);
+            doNothing().when(livroService).disponivelLivro(dto.id_livro());
             when(emprestimoRepository.save(any(Emprestimo.class))).thenReturn(emprestimoSalvo);
 
             EmprestimoResponseDTO resultado = new EmprestimoResponseDTO(emprestimoRepository.save(emprestimoSalvo));
@@ -86,6 +90,7 @@ public class EmprestimoServiceTest {
             assertEquals(1L,resultado.idUsuario());
 
             verify(emprestimoRepository,times(1)).existsByIdLivroAndIdUsuario(dto.id_livro(), dto.id_usuario());
+            verify(livroService, times(1)).disponivelLivro(dto.id_livro());
             verify(emprestimoRepository, times(1)).save(emprestimoSalvo);
         }
 
@@ -114,31 +119,34 @@ public class EmprestimoServiceTest {
         @Test
         @DisplayName("Deve Remove do banco de dados emprestimo pelo Id passado como parametro.")
         void deveRemoveEmprestimo(){
-            Long id = 1L;
-            Emprestimo emprestimoDeletado = new Emprestimo(1L,1L,1L,DataUtil.dataAtual(),DataUtil.dataDevolucao());
+            Long idEmprestimo = 1L;
+            Long idLivro = 10L;
+            Emprestimo emprestimoBuscado = new Emprestimo(1L,1L,1L,DataUtil.dataAtual(),DataUtil.dataDevolucao());
 
-            when(emprestimoRepository.existsById(id)).thenReturn(true);
-            doNothing().when(emprestimoRepository).delete(emprestimoDeletado);
+            when(emprestimoRepository.findById(idEmprestimo)).thenReturn(Optional.of(emprestimoBuscado));
+            doNothing().when(livroService).disponivelLivro(idLivro);
+            doNothing().when(emprestimoRepository).deleteById(idEmprestimo);
 
-            emprestimoService.removeEmprestimo(id);
+            emprestimoService.removeEmprestimo(idEmprestimo);
 
-            verify(emprestimoRepository,times(1)).existsById(id);
-            verify(emprestimoRepository,times(1)).deleteById(id);
+            verify(emprestimoRepository,times(1)).findById(idEmprestimo);
+            verify(livroService, times(1)).disponivelLivro(idLivro);
+            verify(emprestimoRepository,times(1)).deleteById(idEmprestimo);
 
         }
 
         @Test
-        @DisplayName("Deve lançar uma exceção 404 ao tentar remover o emprestimo")
+        @DisplayName("Deve lançar uma exceção 404 NOT_FOUND ao tentar remover o emprestimo")
         void deveLancarExcecaoRemoveEmprestimo(){
-            Long id = 1L;
+            Long idInexistente = 99L;
 
-            when(emprestimoRepository.existsById(id)).thenReturn(false);
+            when(emprestimoRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
             ResponseStatusException ex =
-                    assertThrows(ResponseStatusException.class, () -> emprestimoService.removeEmprestimo(id));
+                    assertThrows(ResponseStatusException.class, () -> emprestimoService.removeEmprestimo(idInexistente));
 
             assertEquals(404,ex.getStatusCode().value());
-            verify(emprestimoRepository, times(1)).existsById(id);
+            verify(emprestimoRepository, times(1)).findById(idInexistente);
             verify(emprestimoRepository, never()).deleteById(anyLong());
         }
     }

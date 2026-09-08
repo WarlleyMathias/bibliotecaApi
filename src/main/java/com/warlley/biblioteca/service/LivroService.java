@@ -20,57 +20,52 @@ public class LivroService {
         this.livroRepository = livroRepository;
     }
 
-    public LivroResponseDTO buscarLivro(Long aLong){
+    public LivroResponseDTO buscarLivro(Long aLong) {
         return new LivroResponseDTO(livroRepository.findById(aLong).orElseThrow(()
-        -> new ResponseStatusException(HttpStatus.NOT_FOUND,"livro não encontrado")));
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não encontrado")));
     }
-    public void disponivelLivro(Long id){
+
+    public void disponivelLivro(Long id) {
         Livro livro = livroRepository.findById(id).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND,"livro não encontrado"));
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não encontrado"));
         livro.setDisponivel(!livro.isDisponivel());
         livroRepository.save(livro);
     }
 
-    public List<LivroResponseDTO> buscarTodosLivros(){
+    public List<LivroResponseDTO> buscarTodosLivros() {
         return livroRepository.findAll().stream().map(LivroResponseDTO::new).toList();
     }
 
-    public void deletarLivro(Long aLong){
-        if(buscarLivroId(aLong)){
+    public void deletarLivro(Long aLong) {
+        if (livroRepository.existsById(aLong)) {
             livroRepository.deleteById(aLong);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
 
     }
+
     @Transactional
-    public LivroResponseDTO updateLivro(LivroRequestDTO livroDTO, Long id){
+    public LivroResponseDTO updateLivro(LivroRequestDTO livroDTO, Long id) {
         Livro livro = new Livro(livroDTO);
         livro.setDisponivel(!livro.isDisponivel());
         livro.setId(id);
-        if(buscarLivroId(livro.getId())) {
-            if(!buscarLivroTitulo(livro.getTitulo())) {
+        if (livroRepository.existsById(livro.getId())) {
+            if (!livroRepository.existsByTitulo(livro.getTitulo())) {
                 return new LivroResponseDTO(livroRepository.save(livro));
             }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Titulo indisponivel.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Titulo indisponivel.");
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente.");
 
     }
 
     @Transactional
-    public LivroResponseDTO addLivro(LivroRequestDTO livroDTO){
-        if(buscarLivroTitulo(livroDTO.titulo())) {
+    public LivroResponseDTO addLivro(LivroRequestDTO livroDTO) {
+        if (livroRepository.existsByTitulo(livroDTO.titulo())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "livro ja existente");
         }
         Livro livro = new Livro(livroDTO);
         return new LivroResponseDTO(livroRepository.save(livro));
 
-    }
-
-    public Boolean buscarLivroTitulo(String titulo){
-        return livroRepository.existsByTitulo(titulo);
-    }
-    public Boolean buscarLivroId(Long id){
-        return livroRepository.existsById(id);
     }
 }
