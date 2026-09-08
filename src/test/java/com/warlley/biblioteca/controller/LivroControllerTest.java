@@ -3,7 +3,6 @@ package com.warlley.biblioteca.controller;
 
 import com.warlley.biblioteca.dto.LivroRequestDTO;
 import com.warlley.biblioteca.dto.LivroResponseDTO;
-import com.warlley.biblioteca.model.Livro;
 import com.warlley.biblioteca.service.LivroService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

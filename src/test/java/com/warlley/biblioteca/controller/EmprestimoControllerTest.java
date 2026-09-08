@@ -2,7 +2,6 @@ package com.warlley.biblioteca.controller;
 
 import com.warlley.biblioteca.dto.EmprestimoRequestDTO;
 import com.warlley.biblioteca.dto.EmprestimoResponseDTO;
-import com.warlley.biblioteca.model.Emprestimo;
 import com.warlley.biblioteca.service.EmprestimoService;
 import com.warlley.biblioteca.util.DataUtil;
 import org.junit.jupiter.api.DisplayName;
