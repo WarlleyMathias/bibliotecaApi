@@ -40,7 +40,7 @@ public class UsuarioController {
     })
     @PostMapping("/usuarios")
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO){
-        usuarioService.criarUsuario(usuarioDTO);
+    public UsuarioResponseDTO salvarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO){
+        return usuarioService.criarUsuario(usuarioDTO);
     }
 }
