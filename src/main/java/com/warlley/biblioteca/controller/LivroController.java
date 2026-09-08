@@ -28,7 +28,7 @@ public class LivroController {
             @ApiResponse(responseCode = "200", description = "lista retornada com sucesso.")
     })
     @GetMapping("/livros")
-    public List<Livro> listaLivros(){
+    public List<LivroResponseDTO> listaLivros(){
         return livroService.buscarTodosLivros();
     }
 
@@ -38,7 +38,7 @@ public class LivroController {
             @ApiResponse(responseCode = "404", description = "Id informado não existe no banco de dados.")
     })
     @GetMapping("/livros/{id}")
-    public Livro getLivro(@PathVariable Long id){
+    public LivroResponseDTO getLivro(@PathVariable Long id){
         return livroService.buscarLivro(id);
     }
 
