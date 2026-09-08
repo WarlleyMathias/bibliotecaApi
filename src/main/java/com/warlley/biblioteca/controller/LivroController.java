@@ -2,7 +2,6 @@ package com.warlley.biblioteca.controller;
 
 import com.warlley.biblioteca.dto.LivroRequestDTO;
 import com.warlley.biblioteca.dto.LivroResponseDTO;
-import com.warlley.biblioteca.model.Livro;
 import com.warlley.biblioteca.service.LivroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
