@@ -20,18 +20,19 @@ public class LivroService {
         this.livroRepository = livroRepository;
     }
 
-    public Livro buscarLivro(Long aLong){
-        return livroRepository.findById(aLong).orElseThrow(()
-        -> new ResponseStatusException(HttpStatus.NOT_FOUND,"livro não encontrado"));
+    public LivroResponseDTO buscarLivro(Long aLong){
+        return new LivroResponseDTO(livroRepository.findById(aLong).orElseThrow(()
+        -> new ResponseStatusException(HttpStatus.NOT_FOUND,"livro não encontrado")));
     }
     public void disponivelLivro(Long id){
-        Livro livro = buscarLivro(id);
-        livro.setDisponivel(!livro.getDisponivel());
+        Livro livro = livroRepository.findById(id).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND,"livro não encontrado"));
+        livro.setDisponivel(!livro.isDisponivel());
         livroRepository.save(livro);
     }
 
-    public List<Livro> buscarTodosLivros(){
-        return livroRepository.findAll();
+    public List<LivroResponseDTO> buscarTodosLivros(){
+        return livroRepository.findAll().stream().map(LivroResponseDTO::new).toList();
     }
 
     public void deletarLivro(Long aLong){
@@ -46,10 +47,13 @@ public class LivroService {
         Livro livro = new Livro(livroDTO);
         livro.setDisponivel(!livro.isDisponivel());
         livro.setId(id);
-        if(buscarLivroId(livro.getId()) && !buscarLivroTitulo(livro.getTitulo())) {
-            return new LivroResponseDTO(livroRepository.save(livro));
+        if(buscarLivroId(livro.getId())) {
+            if(!buscarLivroTitulo(livro.getTitulo())) {
+                return new LivroResponseDTO(livroRepository.save(livro));
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Titulo indisponivel.");
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente ou titulo indisponivel");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente.");
 
     }
 
