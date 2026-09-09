@@ -39,8 +39,9 @@ public class LivroService {
     public void deletarLivro(Long aLong) {
         if (livroRepository.existsById(aLong)) {
             livroRepository.deleteById(aLong);
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "livro não existente");
 
     }
 

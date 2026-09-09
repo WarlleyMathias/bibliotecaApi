@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(LivroController.class)
 class LivroControllerTest {
 
     @Autowired
@@ -44,7 +44,7 @@ class LivroControllerTest {
         @DisplayName("Deve Retornar status 200 OK e a lista de livros.")
         void deveListarLivros() throws Exception {
             LivroResponseDTO livro1 = new LivroResponseDTO(1L, "Mundo", "Marcos", 1999, true);
-            LivroResponseDTO livro2 = new LivroResponseDTO(1L, "Mundo2", "Marcola", 1999, true);
+            LivroResponseDTO livro2 = new LivroResponseDTO(2L, "Mundo2", "Marcola", 1999, true);
             List<LivroResponseDTO> livroResponseDTOList = List.of(livro1, livro2);
 
             when(livroService.buscarTodosLivros()).thenReturn(livroResponseDTOList);
@@ -78,6 +78,7 @@ class LivroControllerTest {
 
             verify(livroService, times(1)).buscarTodosLivros();
         }
+    }
 
         @Nested
         @DisplayName("GET /livros/{id} - buscar livro.")
@@ -185,7 +186,7 @@ class LivroControllerTest {
 
                 when(livroService.updateLivro(livroRequestDTO, id)).thenReturn(livroAtualizado);
 
-                mockMvc.perform(put("/livros/{id}",id)
+                mockMvc.perform(put("/livros/{id}", id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(livroRequestDTO)))
                         .andExpect(status().isOk())
@@ -204,7 +205,7 @@ class LivroControllerTest {
 
                 when(livroService.updateLivro(livroRequestDTO, id)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não existe para sem atualizado."));
 
-                mockMvc.perform(put("/livros/{id}",id)
+                mockMvc.perform(put("/livros/{id}", id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(livroRequestDTO)))
                         .andExpect(status().isNotFound());
@@ -218,7 +219,7 @@ class LivroControllerTest {
                 Long id = 1L;
                 LivroRequestDTO livroRequestDTO = new LivroRequestDTO("", "Marcos", 1999);
 
-                mockMvc.perform(put("/livros/{id}",id)
+                mockMvc.perform(put("/livros/{id}", id)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(livroRequestDTO)))
                         .andExpect(status().isBadRequest());
@@ -226,25 +227,22 @@ class LivroControllerTest {
                 verify(livroService, never()).updateLivro(livroRequestDTO, id);
             }
 
+            @Test
+            @DisplayName("Deve Retornar status 409 quando livro já existe com esse nome.")
+            void deveLancarExcecaoConflitoAtualizarLivro() throws Exception {
+                Long id = 1L;
+                LivroRequestDTO livroRequestDTO = new LivroRequestDTO("Mundo", "Marcos", 1999);
+
+                when(livroService.updateLivro(livroRequestDTO, id)).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Já existe um livro com esse nome."));
+
+                mockMvc.perform(put("/livros/{id}", id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(livroRequestDTO)))
+                        .andExpect(status().isConflict());
+
+                verify(livroService, times(1)).updateLivro(livroRequestDTO, id);
+            }
         }
-
-        @Test
-        @DisplayName("Deve Retornar status 409 quando livro já existe com esse nome.")
-        void deveLancarExcecaoConflitoAtualizarLivro() throws Exception {
-            Long id = 1L;
-            LivroRequestDTO livroRequestDTO = new LivroRequestDTO("Mundo", "Marcos", 1999);
-
-            when(livroService.updateLivro(livroRequestDTO, id)).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Já existe um livro com esse nome."));
-
-            mockMvc.perform(put("/livros/{id}",id)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(livroRequestDTO)))
-                    .andExpect(status().isConflict());
-
-            verify(livroService, times(1)).updateLivro(livroRequestDTO, id);
-        }
-
-    }
 
     @Nested
     @DisplayName("DELETE /livros/{id} - atualizar livro.")

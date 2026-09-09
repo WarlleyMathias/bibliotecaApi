@@ -38,9 +38,9 @@ public class LivroServiceTest {
         void deveAtualizarLivro(){
             Long id = 1L;
             LivroRequestDTO livro = new LivroRequestDTO("Code Clean","Warlley",1999);
-            Livro livroSalvo = new Livro(1L, "Clean Code", "Warlley",1999, true);
+            Livro livroSalvo = new Livro(1L, "Code Clean", "Warlley",1999, true);
 
-            when(livroRepository.existsByTitulo(livro.titulo())).thenReturn(true);
+            when(livroRepository.existsByTitulo(livro.titulo())).thenReturn(false);
             when(livroRepository.existsById(id)).thenReturn(true);
             when(livroRepository.save(any(Livro.class))).thenReturn(livroSalvo);
 
@@ -55,7 +55,7 @@ public class LivroServiceTest {
 
             verify(livroRepository, times(1)).existsByTitulo(livro.titulo());
             verify(livroRepository, times(1)).existsById(id);
-            verify(livroRepository, times(1)).save(livroSalvo);
+            verify(livroRepository, times(1)).save(any(Livro.class));
         }
         @Test
         @DisplayName("Deve Lançar uma exceção 404 NOT_FOUND ao tentar atualizar livro no banco de dados.")
@@ -79,12 +79,14 @@ public class LivroServiceTest {
             Long id = 1L;
             LivroRequestDTO livro = new LivroRequestDTO("Code Clean","Warlley",1999);
 
-            when(livroRepository.existsByTitulo(livro.titulo())).thenReturn(false);
+            when(livroRepository.existsById(id)).thenReturn(true);
+            when(livroRepository.existsByTitulo(livro.titulo())).thenReturn(true);
 
             ResponseStatusException ex =
                     assertThrows(ResponseStatusException.class, () -> livroService.updateLivro(livro,id));
 
             assertEquals(409,ex.getStatusCode().value());
+            verify(livroRepository, times(1)).existsById(id);
             verify(livroRepository, times(1)).existsByTitulo(livro.titulo());
             verify(livroRepository, never()).save(any(Livro.class));
 

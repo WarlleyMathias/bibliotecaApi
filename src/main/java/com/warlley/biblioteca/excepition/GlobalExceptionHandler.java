@@ -2,6 +2,7 @@ package com.warlley.biblioteca.excepition;
 
 import com.warlley.biblioteca.dto.ErroRespostaDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -30,14 +31,16 @@ public class GlobalExceptionHandler {
         );
     }
     @ExceptionHandler(ResponseStatusException.class)
-    public ErroRespostaDTO tratarResponseStatus(ResponseStatusException ex){
-        return new ErroRespostaDTO(
+    public ResponseEntity<ErroRespostaDTO> tratarResponseStatus(ResponseStatusException ex) {
+        ErroRespostaDTO erro = new ErroRespostaDTO(
                 ex.getStatusCode().value(),
-                ex.getMessage(),
+                ex.getReason(), // Use ex.getReason() para pegar apenas a mensagem limpa
                 LocalDateTime.now(),
                 null
-
         );
+
+        // Retorna o DTO com o status real da exceção (no seu caso, 409)
+        return ResponseEntity.status(ex.getStatusCode()).body(erro);
     }
 
 }

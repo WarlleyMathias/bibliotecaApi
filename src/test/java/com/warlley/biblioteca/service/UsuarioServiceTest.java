@@ -82,7 +82,7 @@ public class UsuarioServiceTest {
 
             verify(usuarioRepository,times(1)).existsByNome(usuarioRequestDTO.nome());
             verify(usuarioRepository,times(1)).existsByEmail(usuarioRequestDTO.email());
-            verify(usuarioRepository,times(1)).save(usuarioSalvo);
+            verify(usuarioRepository,times(1)).save(any(Usuario.class));
         }
         @Test
         @DisplayName("Deve lançar uma exceção 409 ao tentar criar um novo usuario.")
@@ -104,7 +104,7 @@ public class UsuarioServiceTest {
         void deveLancarUmaExcecaoEmailCoflito(){
             UsuarioRequestDTO usuarioRequestDTO = new UsuarioRequestDTO("Marcelo","marcelo@gmai.com");
 
-            when(usuarioRepository.existsByNome(usuarioRequestDTO.email())).thenReturn(true);
+            when(usuarioRepository.existsByEmail(usuarioRequestDTO.email())).thenReturn(true);
 
             ResponseStatusException ex =
                     assertThrows(ResponseStatusException.class, () ->usuarioService.criarUsuario(usuarioRequestDTO));

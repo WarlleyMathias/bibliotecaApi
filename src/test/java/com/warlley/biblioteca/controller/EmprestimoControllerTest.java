@@ -24,8 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
-class EmprestimoControllerTest {
+@WebMvcTest(EmprestimoController.class)
+class EmprestimoControllerTest{
 
     @Autowired
     private MockMvc mockMvc;
@@ -146,7 +146,7 @@ class EmprestimoControllerTest {
         }
 
         @Test
-        @DisplayName("Deve Retornar status 409 quando livro já está emprestado.")
+        @DisplayName("Deve Retornar status 409 CONFLICT quando livro já está emprestado.")
         void deveLancarExcecaoConflitoCriarEmprestimo() throws Exception{
             EmprestimoRequestDTO emprestimoRequest = new EmprestimoRequestDTO(1L,1L);
 

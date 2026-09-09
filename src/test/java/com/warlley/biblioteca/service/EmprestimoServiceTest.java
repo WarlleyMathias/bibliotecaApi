@@ -30,7 +30,7 @@ public class EmprestimoServiceTest {
     @InjectMocks
     private EmprestimoService emprestimoService;
 
-    @InjectMocks
+    @Mock
     private LivroService livroService;
 
     @Nested
@@ -78,20 +78,22 @@ public class EmprestimoServiceTest {
             Emprestimo emprestimoSalvo = new Emprestimo(1L,1L,1L,DataUtil.dataAtual(),DataUtil.dataDevolucao());
 
 
-            when(emprestimoRepository.existsByIdLivroAndIdUsuario(dto.id_livro(),dto.id_usuario())).thenReturn(false);
+            when(emprestimoRepository.existsByIdLivroAndIdUsuario(dto.id_livro(), dto.id_usuario())).thenReturn(false);
             doNothing().when(livroService).disponivelLivro(dto.id_livro());
             when(emprestimoRepository.save(any(Emprestimo.class))).thenReturn(emprestimoSalvo);
 
-            EmprestimoResponseDTO resultado = new EmprestimoResponseDTO(emprestimoRepository.save(emprestimoSalvo));
+            EmprestimoResponseDTO resultado = emprestimoService.addEmprestimo(dto);
 
             assertNotNull(resultado);
             assertEquals(1L,resultado.id());
             assertEquals(1L,resultado.idLivro());
             assertEquals(1L,resultado.idUsuario());
+            assertEquals(DataUtil.dataAtual(),resultado.dataEmprestimo());
+            assertEquals(DataUtil.dataDevolucao(),resultado.dataDevolucao());
 
             verify(emprestimoRepository,times(1)).existsByIdLivroAndIdUsuario(dto.id_livro(), dto.id_usuario());
             verify(livroService, times(1)).disponivelLivro(dto.id_livro());
-            verify(emprestimoRepository, times(1)).save(emprestimoSalvo);
+            verify(emprestimoRepository, times(1)).save(any(Emprestimo.class));
         }
 
         @Test
@@ -121,7 +123,7 @@ public class EmprestimoServiceTest {
         void deveRemoveEmprestimo(){
             Long idEmprestimo = 1L;
             Long idLivro = 10L;
-            Emprestimo emprestimoBuscado = new Emprestimo(1L,1L,1L,DataUtil.dataAtual(),DataUtil.dataDevolucao());
+            Emprestimo emprestimoBuscado = new Emprestimo(1L,10L,1L,DataUtil.dataAtual(),DataUtil.dataDevolucao());
 
             when(emprestimoRepository.findById(idEmprestimo)).thenReturn(Optional.of(emprestimoBuscado));
             doNothing().when(livroService).disponivelLivro(idLivro);
