@@ -1,30 +1,48 @@
-# 📚 API Rest - Gestão de Biblioteca
+# 📚 Biblioteca API
 
-API RESTful desenvolvida com Spring Boot 3 para gerenciamento de biblioteca, cobrindo operações completas de CRUD com validação de dados, regras de negócio e persistência em banco de dados PostgreSQL.
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-* **Linguagem:** Java 21
-* **Framework:** Spring Boot 3.4+
-    * Spring Data JPA
-    * Spring Web
-    * Spring Validation
-* **Banco de Dados:** PostgreSQL
-* **Containerização:** Docker & Docker Compose
-* **Testes:** JUnit 5, Mockito, MockMvc, ObjectMapper
-* **Build Tool:** Maven
+> API RESTful robusta para gerenciamento completo de acervo bibliográfico, empréstimos e usuários.
 
 ---
 
-## 🏛️ Arquitetura do Projeto
+## 🛠️ Tecnologias e Ferramentas
 
-```text
-src/main/java/com/exemplo/biblioteca/
-├── controller/     # Endpoints REST (HTTP Request/Response)
-├── dto/            # Data Transfer Objects
-├── model/          # Entidades do JPA mapeadas para o banco
-├── repository/     # Interfaces do Spring Data JPA
-├── service/        # Regras de negócio e validações
-└── exception/      # Tratamento global de exceções
+- **Linguagem:** Java 17
+- **Framework:** Spring Boot 3
+- **Persistência & Banco de Dados:** Spring Data JPA, PostgreSQL, Flyway / Hibernate
+- **Validação & Exceções:** Bean Validation, Global Exception Handling (`@ControllerAdvice`)
+- **Testes:** JUnit 5, Mockito
+- **Documentação:** OpenAPI / Swagger UI
+- **Containerização:** Docker & Docker Compose
+- **Build Tool:** Maven
+
+---
+
+## 📌 Funcionalidades Principais
+
+- [x] **Gestão de Livros & Autores:** Cadastro, atualização, listagem e remoção com validações de dados.
+- [x] **Controle de Empréstimos:** Regras de negócio para verificação de disponibilidade, prazos e devoluções.
+- [x] **Tratamento de Erros:** Respostas HTTP padronizadas (RFC 7807 / Problem Details) para falhas de validação e recursos não encontrados.
+- [x] **Testes Automatizados:** Cobertura de testes unitários para serviços e regras de negócio com Mockito.
+
+---
+
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+- Java 17+
+- Maven
+- Docker / Docker Compose (opcional)
+
+### Passos
+
+# 1. Clone o repositório
+git clone https://github.com/WarlleyMathias/NOME-DO-SEU-REPOSISTORIO.git
+
+# 2. Suba o banco de dados com Docker
+docker-compose up -d
+
+# 3. Execute a aplicação
+mvn spring-boot:run
+
+# 4. Acesse a documentação no navegador:
+http://localhost:8080/swagger-ui.html
