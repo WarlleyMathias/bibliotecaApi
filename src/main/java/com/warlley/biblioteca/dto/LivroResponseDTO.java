@@ -10,7 +10,7 @@ public record LivroResponseDTO(
         boolean disponivel
 ){
     public LivroResponseDTO(Livro livro){
-        this(livro.getId(), livro.getTitulo(), livro.getAutor(), livro.getAno(), livro.getDisponivel());
+        this(livro.getId(), livro.getTitulo(), livro.getAutor(), livro.getAno(), livro.isDisponivel());
     }
 }
 
